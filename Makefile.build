@@ -30,11 +30,11 @@ clean_subdirs=$(subdirs:%=clean.rec-%)
 cleanall_subdirs=$(subdirs:%=cleanall.rec-%)
 
 %.o: %.c
-	$(CC) -o $@ $(CFLAGS) -c $<
+	$(CC) -c $< $(CFLAGS) -o $@
 
 built-in.o:$(build_subdirs) $(objs)
 	$(if $(strip $(subdirs))$(strip $(objs)), \
-		ld -o $@ -r $(subdirs:%=%/built-in.o) $(objs), \
+		ld $(objs) -r $(subdirs:%=%/built-in.o) -o $@, \
 		ar -rcs $@)
 
 clean.rec:$(clean_subdirs)

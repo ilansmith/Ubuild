@@ -7,7 +7,7 @@ PHONY+=test
 obj-y=a b
 
 test:built-in.o
-	$(LD) -o $@ $^
+	$(LD) $^ -o $@
 
 clean:clean.rec
 cleanall:cleanall.rec
