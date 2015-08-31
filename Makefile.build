@@ -7,6 +7,7 @@ CFLAGS=-g -Wall -Werror
 PHONY+=do $(subdirs)
 
 .PHONY:$(PHONY)
+.SILENT:xxx
 
 %.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
@@ -33,3 +34,8 @@ built-in.o:$(objs)
 
 xxx:
 	true
+
+cleanf:
+	rm -f a/test_a.o a/built-in.o
+	rm -f b/test_b.o b/built-in.o
+	rm -f b/c/test_c.o b/c/built-in.o
