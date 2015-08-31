@@ -1,0 +1,35 @@
+CC=gcc
+LD=gcc
+CFLAGS=-g -Wall -Werror
+
+-include Kbuild
+
+PHONY+=do $(subdirs)
+
+.PHONY:$(PHONY)
+
+%.o: %.c
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+subdirs=$(filter-out %.o,$(obj-y))
+objs=$(filter %.o,$(obj-y))
+
+build := -f $(PROJECT_PATH)/Makefile.build
+
+TARGETS=$(subdirs)
+ifneq ($(objs),)
+	TARGETS+=built-in.o
+endif
+
+do: $(TARGETS)
+	@echo did: $(TARGETS)
+
+$(subdirs):xxx
+	@echo doing subdir $@
+	$(MAKE) -C $@ -w $(build) do
+
+built-in.o:$(objs)
+	ld -o $@ -r $^
+
+xxx:
+	true
