@@ -9,7 +9,9 @@ PHONY+=build $(subdirs) $(build_subdirs)
 .PHONY:$(PHONY)
 .SILENT:force
 
-use := -f $(PROJECT_PATH)/Makefile.build
+define do_make
+$(MAKE) -C $(@:$1-%=%) -w -f $(PROJECT_PATH)/Makefile.build $2
+endef
 
 objs=$(filter %.o,$(obj-y))
 subdirs=$(filter-out %.o,$(obj-y))
@@ -33,17 +35,13 @@ cleanall.rec:$(cleanall_subdirs)
 	rm -f tags
 
 $(build_subdirs):force
-	$(MAKE) -C $(@:build-%=%) -w $(use) built-in.o
-
-define do_clean_subdirs
-$(MAKE) -C $(@:$1-%=%) -w $(use) $1
-endef
+	$(call do_make,build,built-in.o)
 
 $(clean_subdirs):force
-	$(call do_clean_subdirs,clean.rec)
+	$(call do_make,clean.rec,clean.rec)
 
 $(cleanall_subdirs):force
-	$(call do_clean_subdirs,cleanall.rec)
+	$(call do_make,cleanall.rec,cleanall.rec)
 
 force:
 	true
