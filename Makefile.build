@@ -7,7 +7,7 @@ CFLAGS=-g -Wall -Werror
 PHONY+=do $(subdirs)
 
 .PHONY:$(PHONY)
-.SILENT:xxx
+.SILENT:force
 
 %.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
@@ -25,14 +25,14 @@ endif
 do: $(TARGETS)
 	@echo did: $(TARGETS)
 
-$(subdirs):xxx
+$(subdirs):force
 	@echo doing subdir $@
 	$(MAKE) -C $@ -w $(build) do
 
 built-in.o:$(objs)
 	ld -o $@ -r $^
 
-xxx:
+force:
 	true
 
 cleanf:
