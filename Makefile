@@ -7,7 +7,7 @@ PROG=make_test
 
 obj-y=a b
 
-test:do
+test:build
 	@echo $@ PHONY:$(PHONY)
 	@echo $@ obj-y:$(obj-y)
 	@echo $@ subdirs:$(subdirs)

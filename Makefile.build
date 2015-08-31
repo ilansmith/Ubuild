@@ -4,7 +4,7 @@ CFLAGS=-g -Wall -Werror
 
 -include Kbuild
 
-PHONY+=do $(subdirs)
+PHONY+=build $(subdirs)
 
 .PHONY:$(PHONY)
 .SILENT:force
@@ -26,12 +26,11 @@ ifneq ($(objs),)
 	TARGETS+=$(call fullpath,built-in.o)
 endif
 
-do: $(TARGETS)
+build: $(TARGETS)
 	@echo did: $(TARGETS)
 
 $(subdirs):force
-	@echo doing subdir $@
-	$(MAKE) -C $@ -w $(build) do
+	$(MAKE) -C $@ -w $(build) build
 
 $(call fullpath,built-in.o):$(objs)
 	ld -o $@ -r $^
