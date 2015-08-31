@@ -1,2 +1,2 @@
-obj-y += test_a.o
+obj-$(CONFIG_A) += test_a.o
 

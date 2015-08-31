@@ -1,7 +1,15 @@
 CC=gcc
 LD=gcc
-CFLAGS=-g -Wall -Werror
 
+define make_config
+$(patsubst %=$1,-D%,$(filter %=$1,$(CONFIGS)))
+endef
+
+CONFIG_Y=$(call make_config,y)
+CONFIG_M=$(call make_config,m)
+CFLAGS=-g -Wall -Werror $(CONFIG_Y) $(CONFIG_M)
+
+-include $(PROJECT_PATH)/config
 -include Kbuild
 
 PHONY+=build $(subdirs) $(build_subdirs)

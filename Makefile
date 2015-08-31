@@ -1,5 +1,6 @@
 export THIS_MAKEFILE_PATH:=$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 export PROJECT_PATH:=$(shell cd $(dir $(THIS_MAKEFILE_PATH));pwd)
+export CONFIGS=$(shell cat config)
 
 PHONY+=test
 
