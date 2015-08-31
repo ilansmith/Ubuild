@@ -7,10 +7,6 @@ PROG=make_test
 
 obj-y=a b
 
-#OBJS=cps.o fact.o fib.o event.o
-#$(PROG): $(OBJS)
-#	$(CC) -o $@ $^
-
 test:do
 	@echo $@ PHONY:$(PHONY)
 	@echo $@ obj-y:$(obj-y)

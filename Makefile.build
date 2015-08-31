@@ -17,9 +17,13 @@ objs=$(filter %.o,$(obj-y))
 
 build := -f $(PROJECT_PATH)/Makefile.build
 
+define fullpath
+`pwd`/$1
+endef
+
 TARGETS=$(subdirs)
 ifneq ($(objs),)
-	TARGETS+=built-in.o
+	TARGETS+=$(call fullpath,built-in.o)
 endif
 
 do: $(TARGETS)
@@ -29,7 +33,7 @@ $(subdirs):force
 	@echo doing subdir $@
 	$(MAKE) -C $@ -w $(build) do
 
-built-in.o:$(objs)
+$(call fullpath,built-in.o):$(objs)
 	ld -o $@ -r $^
 
 force:
