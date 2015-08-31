@@ -13,8 +13,10 @@ define do_make
 $(MAKE) -C $(@:$1-%=%) -w -f $(PROJECT_PATH)/Makefile.build $2
 endef
 
-objs=$(filter %.o,$(obj-y))
-subdirs=$(filter-out %.o,$(obj-y))
+y=$(filter %.o,$(obj-y))
+m=$(filter %.o,$(obj-m))
+objs=$(strip $(y) $(m))
+subdirs=$(strip $(filter-out %.o,$(obj-y) $(obj-m)))
 build_subdirs=$(subdirs:%=build-%)
 clean_subdirs=$(subdirs:%=clean.rec-%)
 cleanall_subdirs=$(subdirs:%=cleanall.rec-%)
