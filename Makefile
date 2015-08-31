@@ -3,22 +3,10 @@ export PROJECT_PATH:=$(shell cd $(dir $(THIS_MAKEFILE_PATH));pwd)
 
 PHONY+=test
 
-PROG=make_test
-
 obj-y=a b
 
-test:build
-	@echo $@ PHONY:$(PHONY)
-	@echo $@ obj-y:$(obj-y)
-	@echo $@ subdirs:$(subdirs)
-	@echo $@ objs:$(objs)
-	@echo $@ TARGETS:$(TARGETS)
-
-clean:
-	rm -rf *.o
-
-cleanall: clean
-	rm -rf tags $(PROG)
+test:built-in.o
+	$(LD) -o $@ $^
 
 -include Makefile.build
 

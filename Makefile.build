@@ -9,36 +9,27 @@ PHONY+=build $(subdirs)
 .PHONY:$(PHONY)
 .SILENT:force
 
+_build := -f $(PROJECT_PATH)/Makefile.build
+
+objs=$(filter %.o,$(obj-y))
+subdirs=$(filter-out %.o,$(obj-y))
+
 %.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-subdirs=$(filter-out %.o,$(obj-y))
-objs=$(filter %.o,$(obj-y))
-
-build := -f $(PROJECT_PATH)/Makefile.build
-
-define fullpath
-`pwd`/$1
-endef
-
-TARGETS=$(subdirs)
-ifneq ($(objs),)
-	TARGETS+=$(call fullpath,built-in.o)
-endif
-
-build: $(TARGETS)
-	@echo did: $(TARGETS)
-
 $(subdirs):force
-	$(MAKE) -C $@ -w $(build) build
+	$(MAKE) -C $@ -w $(_build) built-in.o
 
-$(call fullpath,built-in.o):$(objs)
-	ld -o $@ -r $^
+built-in.o:$(subdirs) $(objs)
+	$(if $(strip $(subdirs))$(strip $(objs)), \
+		ld -o $@ -r $(subdirs:%=%/built-in.o) $(objs), \
+		ar -rcs $@)
 
 force:
 	true
 
 cleanf:
+	rm -f built-in.o
 	rm -f a/test_a.o a/built-in.o
 	rm -f b/test_b.o b/built-in.o
 	rm -f b/c/test_c.o b/c/built-in.o
