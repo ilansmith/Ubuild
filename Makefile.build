@@ -4,32 +4,53 @@ CFLAGS=-g -Wall -Werror
 
 -include Kbuild
 
-PHONY+=build $(subdirs)
+PHONY+=build $(subdirs) $(build_subdirs)
 
 .PHONY:$(PHONY)
 .SILENT:force
 
-_build := -f $(PROJECT_PATH)/Makefile.build
+use := -f $(PROJECT_PATH)/Makefile.build
 
 objs=$(filter %.o,$(obj-y))
 subdirs=$(filter-out %.o,$(obj-y))
+build_subdirs=$(subdirs:%=build-%)
+clean_subdirs=$(subdirs:%=clean.rec-%)
+cleanall_subdirs=$(subdirs:%=cleanall.rec-%)
 
 %.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-$(subdirs):force
-	$(MAKE) -C $@ -w $(_build) built-in.o
-
-built-in.o:$(subdirs) $(objs)
+built-in.o:$(build_subdirs) $(objs)
 	$(if $(strip $(subdirs))$(strip $(objs)), \
 		ld -o $@ -r $(subdirs:%=%/built-in.o) $(objs), \
 		ar -rcs $@)
+
+clean.rec:$(clean_subdirs)
+	rm -f *.o
+
+cleanall.rec:$(cleanall_subdirs)
+	rm -f *.o
+	rm -f tags
+
+$(build_subdirs):force
+	$(MAKE) -C $(@:build-%=%) -w $(use) built-in.o
+
+define do_clean_subdirs
+$(MAKE) -C $(@:$1-%=%) -w $(use) $1
+endef
+
+$(clean_subdirs):force
+	$(call do_clean_subdirs,clean.rec)
+
+$(cleanall_subdirs):force
+	$(call do_clean_subdirs,cleanall.rec)
 
 force:
 	true
 
 cleanf:
-	rm -f built-in.o
+	rm -f test
+	rm -f test.o built-in.o
 	rm -f a/test_a.o a/built-in.o
 	rm -f b/test_b.o b/built-in.o
 	rm -f b/c/test_c.o b/c/built-in.o

@@ -8,5 +8,9 @@ obj-y=a b
 test:built-in.o
 	$(LD) -o $@ $^
 
+clean:clean.rec
+cleanall:cleanall.rec
+	rm -f test
+
 -include Makefile.build
 
