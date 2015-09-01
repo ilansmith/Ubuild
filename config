@@ -1,4 +1,5 @@
 CONFIG_A=y
 CONFIG_B=y
 CONFIG_C=m
+CONFIG_D=y
 

@@ -1,5 +1,7 @@
 CC=gcc
-LD=gcc
+LD=ld
+AR=ar
+GCC=gcc
 
 define make_config
 $(patsubst %=$1,-D%,$(filter %=$1,$(CONFIGS)))
@@ -32,10 +34,14 @@ cleanall_subdirs=$(subdirs:%=cleanall.rec-%)
 %.o: %.c
 	$(CC) -c $< $(CFLAGS) -o $@
 
+.SECONDEXPANSION:
+%.o:$$($$*-objs)
+	$(LD) -r $($*-objs) -o $@
+
 built-in.o:$(build_subdirs) $(objs)
 	$(if $(strip $(subdirs))$(strip $(objs)), \
-		ld $(objs) -r $(subdirs:%=%/built-in.o) -o $@, \
-		ar -rcs $@)
+		$(LD) -r $(objs) $(subdirs:%=%/built-in.o) -o $@, \
+		$(AR) -rcs $@)
 
 clean.rec:$(clean_subdirs)
 	rm -f *.o
@@ -62,3 +68,5 @@ cleanf:
 	rm -f a/test_a.o a/built-in.o
 	rm -f b/test_b.o b/built-in.o
 	rm -f b/c/test_c.o b/c/built-in.o
+	rm -f b/d/test_d.o b/d/test_d1.o b/d/test_d1.o b/d/built-in.o
+

@@ -7,9 +7,11 @@ PHONY+=test
 obj-y=a b
 
 test:built-in.o
-	$(LD) $^ -o $@
+	$(GCC) $^ -o $@
 
 clean:clean.rec
+	@:
+
 cleanall:cleanall.rec
 	rm -f test
 

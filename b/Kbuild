@@ -1,2 +1,2 @@
 obj-$(CONFIG_B) += test_b.o
-obj-$(CONFIG_C) += c
+obj-$(CONFIG_C) += c d

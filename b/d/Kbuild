@@ -1,0 +1,4 @@
+obj-$(CONFIG_D) += test_d.o
+
+test_d-objs = test_d1.o test_d2.o
+
